@@ -106,7 +106,7 @@ int main(void){
 		maze_step(maze_routData[step]);
 		step += 1;
 		printf("%d•à–Ú\tx = %d\ty = %d\n", step,x,y);
-
+		maze_disp();
 		//–³ŒÀƒ‹[ƒv‘j~¨‰¼’u‚«
 		//x = GOAL_X;
 		//y = GOAL_Y;
@@ -144,7 +144,6 @@ void maze_costInit(){
 						tmp = data[k];
 					}
 				}
-				printf("\n");
 
 				if (!(i == GOAL_X && j == GOAL_Y)){
 					
