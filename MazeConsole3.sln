@@ -7,12 +7,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MazeConsole3", "MazeConsole
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
 		Debug|Win32 = Debug|Win32
+		Release|ARM = Release|ARM
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E1E6D6EF-DB86-435B-9283-ED6CD7C09043}.Debug|ARM.ActiveCfg = Debug|Win32
+		{E1E6D6EF-DB86-435B-9283-ED6CD7C09043}.Debug|ARM.Build.0 = Debug|Win32
 		{E1E6D6EF-DB86-435B-9283-ED6CD7C09043}.Debug|Win32.ActiveCfg = Debug|Win32
 		{E1E6D6EF-DB86-435B-9283-ED6CD7C09043}.Debug|Win32.Build.0 = Debug|Win32
+		{E1E6D6EF-DB86-435B-9283-ED6CD7C09043}.Release|ARM.ActiveCfg = Release|ARM
+		{E1E6D6EF-DB86-435B-9283-ED6CD7C09043}.Release|ARM.Build.0 = Release|ARM
 		{E1E6D6EF-DB86-435B-9283-ED6CD7C09043}.Release|Win32.ActiveCfg = Release|Win32
 		{E1E6D6EF-DB86-435B-9283-ED6CD7C09043}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
