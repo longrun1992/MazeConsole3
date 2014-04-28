@@ -65,8 +65,9 @@ void maze_init(void);
 void maze_step(int);
 void maze_costInit(void);
 int imgRout_judge(int, int, int);
-int imgRout_reInit(void);
+int imgRout_reInit(int,int);
 void maze_set(void);
+void maze_set2(int,int);
 
 
 int main(void){
@@ -76,14 +77,14 @@ int main(void){
 	int tmp = 0;
 
 	maze_init();
-	maze_set();
+	//maze_set();
 	getchar();
 
 	maze_costInit();
 	getchar();
 
 	/*仮想ルートの初期化*/
-	step_total = imgRout_reInit();
+	step_total = imgRout_reInit(x,y);
 	step = 0;
 
 	printf("仮想ルート設定完了\n");
@@ -94,14 +95,17 @@ int main(void){
 	}
 	getchar();
 
+	maze_disp();
+
 	while ( !(x == GOAL_X && y == GOAL_Y)){
-		
+		maze_set2(x, y);
 		tmp=maze_routData[step];
 		tmp = imgRout_judge(tmp, x, y);	//仮想ルートを進行できるかを判断
 		
 		if (tmp != 0){	//仮想ルート進行不能
 			//仮想ルートの再設定
-			step_total=imgRout_reInit();
+			maze_costInit();
+			step_total=imgRout_reInit(x,y);
 			//歩数を0にリセット
 			step = 0;
 		}
@@ -119,6 +123,7 @@ int main(void){
 	}
 
 	printf("\nゴールです\n", x, y);
+	
 	return 0;
 }
 
@@ -145,6 +150,7 @@ void maze_costInit(){
 				data[2] = maze_data[base[0] + 1][base[1]];
 				data[3] = maze_data[base[0]][base[1] - 1];
 				
+				//最小値を求める
 				for (k = 0; k < 4; k++){
 					if (tmp>data[k]){
 						tmp = data[k];
@@ -171,7 +177,6 @@ void maze_costInit(){
 		count++;
 
 	} while (count != (MAX_X * MAX_Y));
-	
 }
 
 /*迷路の初期化関数*/
@@ -313,7 +318,7 @@ void maze_step(int direction){
 
 /*仮想ルートの再設定関数*/
 //4つの壁のうち、コストが最小となる方向を記録し続ける。
-int imgRout_reInit(void){
+int imgRout_reInit(int a,int b){
 	int data[4] = { 0 };
 	int base[2] = { 0 };
 	int step = 0;
@@ -321,6 +326,9 @@ int imgRout_reInit(void){
 	int j = 0;
 	int k = 0;
 	int minimum[2] = { 0 };
+
+	i = a;
+	j = b;
 
 	while (!(i == GOAL_X && j == GOAL_Y)){
 
@@ -435,4 +443,59 @@ void maze_set(){
 	}
 	maze_disp();
 	
+}
+
+//探索シミュレーション用
+void maze_set2(int a,int b){
+	int i, j, k;
+	int base[2] = { 0x00 };
+	int tmp[4] = { 0x00 };
+
+	//迷路のデータを与える ⇒　データの点検をしておくこと
+	maze_predata[0][0] = 0x0B;
+	maze_predata[1][0] = 0x09;
+	maze_predata[2][0] = 0x01;
+	maze_predata[3][0] = 0x03;
+	maze_predata[0][1] = 0x08;
+	maze_predata[1][1] = 0x06;
+	maze_predata[2][1] = 0x0A;
+	maze_predata[3][1] = 0x0A;
+	maze_predata[0][2] = 0x08;
+	maze_predata[1][2] = 0x03;
+	maze_predata[2][2] = 0x0A;
+	maze_predata[3][2] = 0x0A;
+	maze_predata[0][3] = 0x0E;
+	maze_predata[1][3] = 0x0E;
+	maze_predata[2][3] = 0x0C;
+	maze_predata[3][3] = 0x06;
+
+	tmp[0] = 0x08 & maze_predata[a][b];	//8
+	tmp[1] = 0x04 & maze_predata[a][b];	//4;
+	tmp[2] = 0x02 & maze_predata[a][b];	//2;
+	tmp[3] = 0x01 & maze_predata[a][b];	//1;
+
+	for (k = 0; k < 4; k++){
+		if (tmp[k] != 0){
+			tmp[k] = WALL;
+		}
+		else{
+			if (!(a == GOAL_X && b == GOAL_Y)){
+				tmp[k] = DEF;
+			}
+			else{	//ゴール座標だったら…
+				tmp[k] = 0;
+			}
+		}
+	}
+	//ベース座標の計算
+	base[0] = 2 * a + 1;
+	base[1] = 2 * b + 1;
+
+	maze_data[(base[0] - 1)][base[1]] = tmp[0];
+	maze_data[base[0]][(base[1] + 1)] = tmp[1];
+	maze_data[(base[0] + 1)][base[1]] = tmp[2];
+	maze_data[base[0]][(base[1] - 1)] = tmp[3];
+
+	maze_disp();
+
 }
