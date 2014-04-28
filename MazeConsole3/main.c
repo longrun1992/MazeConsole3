@@ -73,7 +73,7 @@ void maze_set2(int,int);
 
 
 int main(void){
-	int i, j;
+	int i = 0;
 	int step = 0;
 	int step_total = 0;
 	int tmp = 0;
@@ -270,7 +270,7 @@ void maze_disp(void){
 
 /*仮想ルートを判定*/
 int imgRout_judge(int step,int a,int b){
-	int i, j;
+	int i = 0;
 	int data[4] = { 0 };
 	int base_plot[2] = { 0 };
 	int tmp[2] = { 999, 5 };
@@ -451,7 +451,7 @@ void maze_set(){
 
 //探索シミュレーション用
 void maze_set2(int a,int b){
-	int i, j, k;
+	int k = 0;
 	int base[2] = { 0x00 };
 	int tmp[4] = { 0x00 };
 
