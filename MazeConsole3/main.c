@@ -28,7 +28,7 @@
 ・maze_step関数を正常動作するように改善
 ->迷路データをどうやって与えるか、方法を考える必要がある。
 
-2014/4.27 川嶋貴史
+2014.4.27 川嶋貴史
 ・maze_set関数のバグを修正、ゴールできることを確認。
 ->プログラムを書いてからしばらく経ってしまった。
 まずはいままで書いてきたプログラムの読み込み直しから始めたい。
@@ -36,6 +36,8 @@
 ①これは最終走行にしか現状では使えない
 ②探索走行アルゴリズムを完成させる必要がある
 
+2014.4.28 川嶋貴史
+・プログラム中の無駄な部分を削除
 
 ********************************/
 
@@ -77,7 +79,6 @@ int main(void){
 	int tmp = 0;
 
 	maze_init();
-	//maze_set();
 	getchar();
 
 	maze_costInit();
@@ -87,8 +88,8 @@ int main(void){
 	step_total = imgRout_reInit(x,y);
 	step = 0;
 
-	printf("仮想ルート設定完了\n");
-	getchar();
+	printf("仮想ルート\n");
+	printf("■■■■■■■■■■■■■\n");
 
 	for (i = 0; i < step_total; i++){
 		printf("%d歩目=%d\n", (i+1), maze_routData[i]);
@@ -117,12 +118,10 @@ int main(void){
 		step += 1;
 		printf("%d歩目\tx = %d\ty = %d\n", step,x,y);
 		maze_disp();
-		//無限ループ阻止→仮置き
-		//x = GOAL_X;
-		//y = GOAL_Y;
+		getchar();
 	}
 
-	printf("\nゴールです\n", x, y);
+	printf("\nゴールです。\n", x, y);
 	
 	return 0;
 }
@@ -138,13 +137,14 @@ void maze_costInit(){
 	do{
 		for (i = SIZE_X-1; i > (-1); i = i - 1){
 			for (j = SIZE_Y-1; j > (-1); j = j - 1){
-				/*変数の初期化*/
+				//変数の初期化
 				tmp = 100;
 
-				/*ベース座標の取得*/
+				//ベース座標の取得
 				base[0] = 2 * i + 1;
 				base[1] = 2 * j + 1;
 
+				//壁情報の取得
 				data[0] = maze_data[base[0] - 1][base[1]];
 				data[1] = maze_data[base[0]][base[1] + 1];
 				data[2] = maze_data[base[0] + 1][base[1]];
@@ -157,17 +157,21 @@ void maze_costInit(){
 					}
 				}
 
+				//ゴール座標以外のコストを更新
 				if (!(i == GOAL_X && j == GOAL_Y)){
-					
+					//左壁
 					if (!(tmp == data[0] || data[0] == WALL)){
 						maze_data[base[0] - 1][base[1]] = tmp+1;
 					}
+					//上壁
 					if (!(tmp == data[1] || data[1] == WALL)){
 						maze_data[base[0]][base[1] + 1] = tmp+1;
 					}
+					//右壁
 					if (!(tmp == data[2] || data[2] == WALL)){
 						maze_data[base[0] + 1][base[1]] = tmp+1;
 					}
+					//下壁
 					if (!(tmp == data[3] || data[3] == WALL)){
 						maze_data[base[0]][base[1] - 1] = tmp+1;
 					}
@@ -487,6 +491,7 @@ void maze_set2(int a,int b){
 			}
 		}
 	}
+
 	//ベース座標の計算
 	base[0] = 2 * a + 1;
 	base[1] = 2 * b + 1;
@@ -495,7 +500,5 @@ void maze_set2(int a,int b){
 	maze_data[base[0]][(base[1] + 1)] = tmp[1];
 	maze_data[(base[0] + 1)][base[1]] = tmp[2];
 	maze_data[base[0]][(base[1] - 1)] = tmp[3];
-
-	maze_disp();
 
 }
