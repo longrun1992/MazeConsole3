@@ -79,10 +79,9 @@ int main(void){
 	int tmp = 0;
 
 	maze_init();
-	getchar();
 
 	maze_costInit();
-	getchar();
+	
 
 	/*仮想ルートの初期化*/
 	step_total = imgRout_reInit(x,y);
@@ -94,7 +93,7 @@ int main(void){
 	for (i = 0; i < step_total; i++){
 		printf("%d歩目=%d\n", (i+1), maze_routData[i]);
 	}
-	getchar();
+	
 
 	maze_disp();
 
@@ -118,11 +117,32 @@ int main(void){
 		step += 1;
 		printf("%d歩目\tx = %d\ty = %d\n", step,x,y);
 		maze_disp();
+		
+	}
+
+	printf("\nゴールです。\n", x, y);
+
+
+	//スタート地点に戻す
+	x = START_X;
+	y = START_Y;
+
+	printf("\n\n最終的にこうなる\n");
+
+	maze_costInit();
+	step_total = imgRout_reInit(x, y);
+	step = 0;
+
+	while (!(x == GOAL_X && y == GOAL_Y)){
+		maze_step(maze_routData[step]);
+		step += 1;
+		printf("%d歩目\tx = %d\ty = %d\n", step, x, y);
+		maze_disp();
 		getchar();
 	}
 
 	printf("\nゴールです。\n", x, y);
-	
+
 	return 0;
 }
 
