@@ -118,7 +118,6 @@ int main(void){
 		step += 1;
 		printf("%d•à–Ú\tx = %d\ty = %d\n", step,x,y);
 		maze_disp();
-		getchar();
 	}
 
 	printf("\nƒS[ƒ‹‚Å‚·B\n", x, y);
