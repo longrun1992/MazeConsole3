@@ -39,6 +39,9 @@
 2014.4.28
 ・プログラム中の無駄な部分を削除
 
+2014.9.11
+・最終走行を実装、マイコン用に表示部分の削減開始
+
 ********************************/
 
 #include<stdio.h>
@@ -68,7 +71,7 @@ void maze_step(int);
 void maze_costInit(void);
 int imgRout_judge(int, int, int);
 int imgRout_reInit(int,int);
-void maze_set(void);
+//void maze_set(void);
 void maze_set2(int,int);
 
 
@@ -79,10 +82,8 @@ int main(void){
 	int tmp = 0;
 
 	maze_init();
-	getchar();
 
 	maze_costInit();
-	getchar();
 
 	/*仮想ルートの初期化*/
 	step_total = imgRout_reInit(x,y);
@@ -94,7 +95,6 @@ int main(void){
 	for (i = 0; i < step_total; i++){
 		printf("%d歩目=%d\n", (i+1), maze_routData[i]);
 	}
-	getchar();
 
 	maze_disp();
 
@@ -121,7 +121,28 @@ int main(void){
 	}
 
 	printf("\nゴールです。\n", x, y);
+
+	getchar();
 	
+	//スタート地点に戻す
+	x = START_X;
+	y = START_Y;
+
+	printf("\n\n最終的にこうなる\n");
+
+	maze_costInit();
+	step_total = imgRout_reInit(x, y);
+	step = 0;
+
+	while (!(x == GOAL_X && y == GOAL_Y)){
+		maze_step(maze_routData[step]);
+		step += 1;
+		printf("%d歩目\tx = %d\ty = %d\n", step, x, y);
+		maze_disp();
+	}
+
+	printf("\nゴールです。\n", x, y);
+
 	return 0;
 }
 
@@ -388,6 +409,7 @@ int imgRout_reInit(int a,int b){
 	return step;
 }
 
+/*
 void maze_set(){
 	int i, j, k;
 	int base[2] = { 0x00 };
@@ -447,6 +469,7 @@ void maze_set(){
 	maze_disp();
 	
 }
+*/
 
 //探索シミュレーション用
 void maze_set2(int a,int b){
