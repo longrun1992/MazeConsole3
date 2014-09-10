@@ -41,6 +41,7 @@
 
 2014.9.11
 ・最終走行を実装、マイコン用に表示部分の削減開始
+・不要な関数を削除
 
 ********************************/
 
@@ -71,8 +72,7 @@ void maze_step(int);
 void maze_costInit(void);
 int imgRout_judge(int, int, int);
 int imgRout_reInit(int,int);
-//void maze_set(void);
-void maze_set2(int,int);
+void maze_set(int,int);
 
 
 int main(void){
@@ -99,7 +99,7 @@ int main(void){
 	maze_disp();
 
 	while ( !(x == GOAL_X && y == GOAL_Y)){
-		maze_set2(x, y);
+		maze_set(x, y);
 		tmp=maze_routData[step];
 		tmp = imgRout_judge(tmp, x, y);	//仮想ルートを進行できるかを判断
 		
@@ -409,70 +409,8 @@ int imgRout_reInit(int a,int b){
 	return step;
 }
 
-/*
-void maze_set(){
-	int i, j, k;
-	int base[2] = { 0x00 };
-	int tmp[4] = { 0x00 };
-
-	//迷路のデータを与える ⇒　データの点検をしておくこと
-	maze_predata[0][0] = 0x0B;	//0x0B
-	maze_predata[1][0] = 0x09;
-	maze_predata[2][0] = 0x01;
-	maze_predata[3][0] = 0x03;
-	maze_predata[0][1] = 0x08;
-	maze_predata[1][1] = 0x06;
-	maze_predata[2][1] = 0x0A;
-	maze_predata[3][1] = 0x0A;
-	maze_predata[0][2] = 0x08;
-	maze_predata[1][2] = 0x03;
-	maze_predata[2][2] = 0x0A;
-	maze_predata[3][2] = 0x0A;
-	maze_predata[0][3] = 0x0E;
-	maze_predata[1][3] = 0x0E;
-	maze_predata[2][3] = 0x0C;
-	maze_predata[3][3] = 0x06;
-	
-
-	for (i = 0; i < SIZE_X; i++){
-		for (j = 0; j < SIZE_Y; j++){
-			tmp[0] = 0x08 & maze_predata[i][j];// / 8;
-			tmp[1] = 0x04 & maze_predata[i][j];// / 4;
-			tmp[2] = 0x02 & maze_predata[i][j];// / 2;
-			tmp[3] = 0x01 & maze_predata[i][j];// / 1;
-			
-			for (k = 0; k < 4; k++){
-				if (tmp[k] != 0){
-					tmp[k] = WALL;
-				}
-				else{
-					if (!(i == GOAL_X && j == GOAL_Y)){
-						tmp[k] = DEF;
-					}
-					else{	//ゴール座標だったら…
-						tmp[k] = 0;
-					}
-				}
-			}
-
-			//ベース座標の計算
-			base[0] = 2 * i + 1;
-			base[1] = 2 * j + 1;
-
-			maze_data[(base[0] - 1)][base[1]] = tmp[0];
-			maze_data[base[0]][(base[1] + 1)] = tmp[1];
-			maze_data[(base[0] + 1)][base[1]] = tmp[2];
-			maze_data[base[0]][(base[1] - 1)] = tmp[3];
-			
-		}
-	}
-	maze_disp();
-	
-}
-*/
-
 //探索シミュレーション用
-void maze_set2(int a,int b){
+void maze_set(int a,int b){
 	int k = 0;
 	int base[2] = { 0x00 };
 	int tmp[4] = { 0x00 };
