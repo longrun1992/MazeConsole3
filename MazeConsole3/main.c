@@ -45,7 +45,9 @@
 
 ********************************/
 
-#include<stdio.h>
+#define _CRT_SECURE_NO_WARNINGS
+
+#include "main.h"
 
 #define SIZE_X 4
 #define SIZE_Y 4
@@ -60,10 +62,10 @@
 #define GOAL_Y 3
 
 /*グローバル変数の宣言*/
-int maze_data[SIZE_X * 2 + 1][SIZE_Y * 2 + 1] = { DEF };
-int maze_predata[SIZE_X][SIZE_Y];
-int maze_routData[MAX_STEP];
-int x, y;
+static int maze_data[SIZE_X * 2 + 1][SIZE_Y * 2 + 1] = { DEF };
+static int maze_predata[SIZE_X][SIZE_Y];	//パソコン上でのみ必要な変数
+static int maze_routData[MAX_STEP] = { 0 };
+static int x, y;
 
 /*プロトタイプ宣言*/
 void maze_disp(void);
@@ -89,11 +91,14 @@ int main(void){
 	step_total = imgRout_reInit(x,y);
 	step = 0;
 
-	printf("仮想ルート\n");
-	printf("■■■■■■■■■■■■■\n");
+	sprintf(output,"仮想ルート\n");
+	usart_printstr(output);
+	sprintf(output,"■■■■■■■■■■■■■\n");
+	usart_printstr(output);
 
 	for (i = 0; i < step_total; i++){
-		printf("%d歩目=%d\n", (i+1), maze_routData[i]);
+		sprintf(output,"%d歩目=%d\n", (i+1), maze_routData[i]);
+		usart_printstr(output);
 	}
 
 	maze_disp();
@@ -116,19 +121,22 @@ int main(void){
 		}
 		maze_step(maze_routData[step]);
 		step += 1;
-		printf("%d歩目\tx = %d\ty = %d\n", step,x,y);
+		sprintf(output,"%d歩目\tx = %d\ty = %d\n", step,x,y);
+		usart_printstr(output);
 		maze_disp();
 	}
 
-	printf("\nゴールです。\n", x, y);
+	sprintf(output,"\nゴールです。\n");
+	usart_printstr(output);
 
-	getchar();
+	//getchar();
 	
 	//スタート地点に戻す
 	x = START_X;
 	y = START_Y;
 
-	printf("\n\n最終的にこうなる\n");
+	sprintf(output,"\n\n最終的にこうなる\n");
+	usart_printstr(output);
 
 	maze_costInit();
 	step_total = imgRout_reInit(x, y);
@@ -137,11 +145,13 @@ int main(void){
 	while (!(x == GOAL_X && y == GOAL_Y)){
 		maze_step(maze_routData[step]);
 		step += 1;
-		printf("%d歩目\tx = %d\ty = %d\n", step, x, y);
+		sprintf(output,"%d歩目\tx = %d\ty = %d\n", step, x, y);
+		usart_printstr(output);
 		maze_disp();
 	}
 
-	printf("\nゴールです。\n", x, y);
+	sprintf(output,"\nゴールです。\n", x, y);
+	usart_printstr(output);
 
 	return 0;
 }
@@ -259,7 +269,8 @@ void maze_init(void){
 		maze_data[base_plot[0]][(base_plot[1] - 1)] = 1;
 	}	
 	
-	printf("初期状態\n");
+	sprintf(output,"初期状態\n");
+	usart_printstr(output);
 	maze_disp();
 
 	return;
@@ -270,21 +281,26 @@ void maze_disp(void){
 	/*ローカル変数の宣言*/
 	int i, j = 0;
 
-	printf("\n");
+	sprintf(output,"\n");
+	usart_printstr(output);
 
 	for (j = SIZE_Y * 2; j >= 0; j -= 1){
 		for (i = 0; i < SIZE_X * 2 + 1; i++){
 			if (maze_data[i][j] == WALL){
-				printf("■");
+				sprintf(output,"■");
+				usart_printstr(output);
 			}
 			else if (i == x * 2 + 1 && j == y * 2 + 1){
-				printf("☆");
+				sprintf(output,"☆");
+				usart_printstr(output);
 			}
 			else{
-				printf("　");
+				sprintf(output,"　");
+				usart_printstr(output);
 			}
 		}
-		printf("\n");
+		sprintf(output,"\n");
+		usart_printstr(output);
 	}
 }
 
@@ -367,12 +383,16 @@ int imgRout_reInit(int a,int b){
 		data[2] = maze_data[(base[0] + 1)][base[1]];
 		data[3] = maze_data[base[0]][(base[1] - 1)];
 
-		printf("( %d , %d )\t", i, j);
+		sprintf(output,"( %d , %d )\t", i, j);
+		usart_printstr(output);
 
 		for (k = 0; k < 4; k++){
-			printf("data[%d]=%d\t", k, data[k]);
+			sprintf(output,"data[%d]=%d\t", k, data[k]);
+			usart_printstr(output);
 		}
-		printf("\n");
+
+		sprintf(output,"\n");
+		usart_printstr(output);
 
 		//コストが最小となる方向を特定
 		for (k = 0; k < 4; k++){
@@ -396,7 +416,8 @@ int imgRout_reInit(int a,int b){
 			j = j - 1;
 			break;
 		default:
-			printf("Error!\n");
+			sprintf(output,"Error!\n");
+			usart_printstr(output);
 			break;
 		}
 
